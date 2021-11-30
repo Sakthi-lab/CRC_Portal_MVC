@@ -1,0 +1,314 @@
+﻿@model PagedList.IPagedList<Portal.Models.NCSM_CRC_DUTY_ContactList>
+<style>
+    .hoverTD:hover {
+        background-color: #00FF00;
+    }
+</style>
+
+
+
+<div>
+
+ 
+
+
+    <div style="width:550px; margin: 0 auto; text-align:right;">
+        <table class="searchTable">
+            <tr>
+                <td style="padding-right: 0;">
+
+                    @using (Html.BeginForm("Index", "Contacts", FormMethod.Get))
+                    {
+                        @Html.TextBox("searchVal", "", new { title = "Search for name.", style = "font-size:12px;" })
+                        <span class="English">
+                            <input type="submit" id="searchBtn" value="Search" class="pgBtn" style="font-size:12px;" />
+                        </span>
+                        <span class="French">
+                            <input type="submit" id="searchBtn" value="chercher" class="pgBtn" style="font-size:12px;" />
+                        </span>
+                        <input type="hidden" class="dFilter" id="dFilter1" name="dFilter" value="@ViewBag.dfilter" />
+                    }
+
+
+                </td>
+                <td>
+                    @using (Html.BeginForm("Index", "Contacts", FormMethod.Get))
+                    {
+                        <span class="English">
+                            <input type="submit" value="Clear" title="Clear search field." class="pgBtn" style="font-size:12px;" />
+                        </span>
+                        <span class="French">
+                            <input type="submit" value="dégager" title="Clear search field." class="pgBtn" style="font-size:12px;" />
+                        </span>
+                            <input type="hidden" class="dFilter" id="dFilter2" name="dFilter" value="@ViewBag.dfilter" />
+                            }
+                    </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <br />
+
+    <div style="width:550px; margin: 0 auto;">
+
+        @if (Model.PageCount > 1)
+        {
+            <span>
+                <strong>
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                    of @Model.PageCount
+                </strong>
+
+                @if (Model.HasPreviousPage)
+                {
+                    <a href="@Href("~/Contacts/Index/")?page=1&searchVal=@ViewBag.currentFilter" class="pgBtn" style="font-size:12px;"><<</a>
+                    @Html.Raw(" ");
+                    <a href="@Href("~/Contacts/Index/")?page=@(Model.PageNumber - 1)&searchVal=@ViewBag.currentFilter" class="pgBtn" style="font-size:12px;">
+                        <span class="English"> < Prev</span>
+                        <span class="French"> < précédent</span>
+                       
+
+
+                    </a>
+
+                }
+                else
+                {
+                    <span class="pgBtn" style="font-size:12px;"><<</span>
+                    @Html.Raw(" ")
+                    <span class="pgBtn" style="font-size:12px;">
+                        <span class="English"> < Prev</span>
+                        <span class="French"> < précédent</span>
+
+                       
+                    </span>
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    <a href="@Href("~/Contacts/Index/")?page=@(Model.PageNumber + 1)&searchVal=@ViewBag.currentFilter" class="pgBtn" style="font-size:12px;"><span class="English">Next ></span><span class="French">Prochain</span></a>
+                    @Html.Raw(" ");
+                    <a href="@Href("~/Contacts/Index/")?page=@Model.PageCount&searchVal=@ViewBag.currentFilter" class="pgBtn" style="font-size:12px;">>></a>
+
+                }
+                else
+                {
+                    <span class="pgBtn" style="font-size:12px;">
+                <span class="English">Next >
+                    </span>
+                <span class="French">Prochain ></span>
+                    
+                    </span>
+                    @Html.Raw(" ")
+                    <span class="pgBtn" style="font-size:12px;">>></span>
+                }
+
+
+            </span>
+        }
+
+
+
+    </div>
+
+    <div style="width:550px; margin: 0 auto; text-align:right;">
+        
+
+
+        <span class="Nbtn" style="font-size:12px;"><span class="English">New Contact</span><span class="French">Nouveau contact</span></span>
+</div>
+    <div style="clear: both;"></div>
+
+    <br />
+    <table style="width: 1225px; background-color: #FFFFFF; border-collapse: collapse; border-style: solid; border-width: 1px; margin: 0 auto;">
+
+        <tr style="background-color: #00a9ec; font-family: Arial; color:#FFFFFF;">
+            <td style="font-weight:bold; border: 1px solid #000000; text-align:center;" colspan="9"><span class="English">Contact Name</span><span class="French">Nom du contact</span></td>
+        </tr>
+
+        <tr style="background-color: #FFFFCC; font-family: Arial; ">
+            <td style="width: 1000px; font-weight:bold; border: 1px solid; text-align:left;"><span class="English">Name</span><span class="French">Nom</span></td>
+            <td style="width: 800px; font-weight:bold; border: 1px solid; text-align:center;"><span class="English">Cell Number (1) SMS</span><span class="French">Cellulaire (1) SMS</span></td>
+            <td style="width: 700px; font-weight:bold; border: 1px solid; text-align:center;"><span class="English">Cell Number (2)</span><span class="French">Cellulaire (2)</span></td>
+            <td style="width: 700px; font-weight:bold; border: 1px solid; text-align:center;"><span class="English">Residency</span><span class="French">Résidence </span></td>
+            <td style="width: 700px; font-weight:bold; border: 1px solid; text-align:center;"><span class="English">Cell Number (3)</span><span class="French">Cellulaire (3)</span></td>
+            <td style="width: 700px; font-weight:bold; border: 1px solid; text-align:center;"><span class="English">Cell Number (4)</span><span class="French">Cellulaire (4)</span></td>
+            <td style="width: 700px; font-weight:bold; border: 1px solid; text-align:center;"><span class="English">Cell Number (5)</span><span class="French">Cellulaire (5)</span></td>
+            <td style="width: 65px; font-weight:bold; border: 1px solid; text-align:center;">&nbsp;</td>
+            <td style="width: 75px; font-weight:bold; border: 1px solid; text-align:center;">&nbsp;</td>
+        </tr>
+
+
+        @foreach (var item in Model)
+        {
+
+
+
+        <tr style="font-family: Arial;" class="hoverTD">
+            <td style="border: 1px solid; text-align:left;"><span rec="@item.ContactID.ToString()" site="@item.ContactFullName">@item.ContactFullName</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@item.ContactID.ToString()">@item.ContactCell1</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@item.ContactID.ToString()">@item.ContactCell2</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@item.ContactID.ToString()">@item.Residency</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@item.ContactID.ToString()">@item.ContactCell3</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@item.ContactID.ToString()">@item.ContactCell4</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@item.ContactID.ToString()">@item.ContactCell5</span></td>
+
+            <td style="border: 1px solid; text-align:center;">
+                <span class="English">
+                    <span rec="@item.ContactID.ToString()" site="@item.ContactID.ToString()" class="Ebtn" style="font-size:12px;">Edit</span>
+
+                </span>
+                <span class="French">
+                    <span rec="@item.ContactID.ToString()" site="@item.ContactID.ToString()" class="Ebtn" style="font-size:12px;">
+                        Éditer
+                    </span>
+                </span>
+
+            </td>
+            <td style="border: 1px solid; text-align:center;"><span rec="@item.ContactID.ToString()" site="@item.ContactFullName.ToString()" class="Dbtn" style="font-size:12px;">Delete</span></td>
+        </tr>
+
+
+        }
+
+
+
+
+    </table>
+
+    @if (Model.PageCount > 1)
+    {
+
+        <br />
+        <div style="width:550px; margin: 0 auto; text-align:left; font-family:Arial;">
+            <strong>
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                of @Model.PageCount
+            </strong>
+
+            @if (Model.HasPreviousPage)
+            {
+                <a href="@Href("~/Contacts/Index/")?page=1&searchVal=@ViewBag.currentFilter" class="pgBtn" style="font-size:12px;"><<</a>
+                @Html.Raw(" ");
+                <a href="@Href("~/Contacts/Index/")?page=@(Model.PageNumber - 1)&searchVal=@ViewBag.currentFilter" class="pgBtn" style="font-size:12px;">
+                    <span class="English"> < Prev</span>
+                    <span class="French"> < précédent</span>
+                </a>
+
+            }
+            else
+            {
+                <span class="pgBtn" style="font-size:12px;"><<</span>
+                @Html.Raw(" ")
+                <span class="pgBtn" style="font-size:12px;">
+
+                    <span class="English"> < Prev</span>
+                    <span class="French"> < précédent</span>
+
+
+                </span>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <a href="@Href("~/Contacts/Index/")?page=@(Model.PageNumber + 1)&searchVal=@ViewBag.currentFilter" class="pgBtn" style="font-size:12px;">
+
+                    <span class="English">
+                        Next >
+                    </span>
+                    <span class="French">Prochain ></span>
+
+
+
+                </a>
+                @Html.Raw(" ");
+                <a href="@Href("~/Contacts/Index/")?page=@Model.PageCount&searchVal=@ViewBag.currentFilter" class="pgBtn" style="font-size:12px;">>></a>
+
+            }
+            else
+            {
+                <span class="pgBtn" style="font-size:12px;">
+                    <span class="English">
+                        Next >
+                    </span>
+                    <span class="French">Prochain ></span>
+                </span>
+                @Html.Raw(" ")
+                <span class="pgBtn" style="font-size:12px;">>></span>
+            }
+        </div>
+
+    }
+
+
+
+    <script>
+
+          $(".Nbtn").button();
+    $(".Eacct").button();
+    $(".Ebtn").button();
+    $(".Dbtn").button();
+    $(".pgBtn").button();
+    $("#addSite").button();
+    $("#doRefresh").button();
+
+
+    $(".Nbtn").click(function () {
+        location.href = "@Href("~/Contacts/Add")";
+    });
+
+    $(".Ebtn").click(function () {
+        location.href = "@Href("~/Contacts/Edit/")" + $(this).attr("rec");
+    });
+
+    $(".Eacct").click(function () {
+        location.href = "@Href("~/Projects/Index/")" + $(this).attr("rec");
+    });
+
+
+    $(".Dbtn").click(function () {
+        $("#delRec").val($(this).attr("rec"));
+        $("#delMsg").html("By deleting this contact, you will also be deleting all Schedules.<p>Are you sure you want to delete " + $(this).attr("site") + "?</p>");
+        $("#ValConf").dialog("open");
+    });
+
+
+    $("#dStatus").change(function () {
+        $(".dFilter").val($(this).val());
+        $("#searchBtn").click();
+    });
+
+
+    $(function () {
+
+        $('#ValConf').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 450,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Delete": function () {
+                    location.href = "@Href("~/Contacts/Delete/")" + $("#delRec").val();
+                },
+                "Cancel": function () {
+                    $(this).dialog("close");
+                },
+            }
+        });
+
+        $("#dStatus").val("@ViewBag.dFilter");
+
+    });
+
+    </script>
+
+
+    <div id="ValConf" title="Confirm Delete">
+        <input type="hidden" id="delRec" name="delRec" value="" />
+        <span id="delMsg"></span>
+    </div>
+
+
+</div>

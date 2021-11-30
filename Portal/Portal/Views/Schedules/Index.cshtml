@@ -1,0 +1,143 @@
+﻿@using Portal.Models;
+
+@{
+    CustomerEntities db = new CustomerEntities();
+
+    var depts = db.NCSM_CRC_DUTY_Officer.Where(w => w.Active == true).OrderBy(o => o.Name);
+
+}
+@{
+    CustomerEntities db2 = new CustomerEntities();
+
+    var SectorNumber = db2.NCSM_Canadian_Red_Cross_QC_CityRegion.Where(w => w.Active == true).Select(o => new { sector = o.SectorNumber }).Distinct().OrderBy(o => o.sector);
+
+}
+
+<style>
+    #hidden_div {
+        text-align: center;
+        display: none;
+    }
+</style>
+
+<div style="width: 900px; margin: 0 auto; text-align: center;">
+    <span class="site-title">
+        <span class="English">   On Call Schedules</span>
+        <span class="French"> Horaires d'appel</span>
+
+       
+    </span>
+    <br />&nbsp;<br />
+</div>
+
+<br />&nbsp;
+<br />
+
+<form id="getSchedule" name="getSchedule" method="post" action="@Href("~/Schedules/ViewSchedule")" >
+    <div style="margin: 0 auto; text-align: center;">
+
+        <span style="color:red;"> *</span>
+        <span class="English"> Duty Officer Role:</span>
+        <span class="French">Rôle de Garde </span>
+
+
+        <span class="English">
+            <select id="ID1" name="ID1" size="1" >
+                <option value=""></option>
+                @foreach (var dept in depts)
+                {
+                    <option value="@dept.ID">@dept.Name</option>
+                }
+            </select>
+        </span>
+        <span class="French">
+            <select id="ID2" name="ID2" size="1">
+                <option value=""></option>
+                @foreach (var dept in depts)
+                {
+                    <option value="@dept.ID">@dept.fName</option>
+                }
+            </select>
+        </span>
+        <input type="text" id="ID" name="ID" hidden="hidden"/>
+        <br /><br />
+        <div id="hidden_div">
+
+
+
+            <span style="color:red;">*</span>Sector:
+
+            <select id="Sector" name="Sector" size="1">
+                <option value=""></option>
+
+
+                @foreach (var SectorNumbers in SectorNumber)
+                {
+                    <option value="@SectorNumbers.sector">@SectorNumbers.sector</option>
+                }
+
+                }
+            </select><br /><br /><br /><br />
+        </div>
+
+
+        <span class="doAdd" style="font-size:12px;"><span class="English">Continue</span><span class="French">Continuer</span></span>
+    </div>
+</form>
+
+
+<script>
+
+    $(".doAdd").button();
+   
+
+    $('#ID1').change(function () {
+        $('#ID').val($(this).val());
+        console.log($('#ID').val());
+
+    });
+    $('#ID2').change(function () {
+        $('#ID').val($('#ID2').val());
+        console.log($('#ID').val());
+    });
+
+
+    $(".doAdd").click(function () {
+
+      
+            if ($("#ID").val() != "") {
+
+                                
+                location.href = "@Href("~/Schedules/ViewSchedule/")" + $("#ID").val();
+                $("#getSchedule").submit();
+            }
+
+          
+
+           
+        });
+
+    $(function () {
+
+        $('#ValErr').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 450,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                },
+            }
+        });
+
+    });
+    
+    function showDiv(divId, element) {
+        document.getElementById(divId).style.display = element.value == 1 ? 'block' : 'none';
+    }
+</script>
+<div id="ValErr" title="Error">
+    <span id="valflderror"><text>@Html.TextBox("Date",(DateTime.Today).AddDays(7), new { @readonly = "readonly", @style = "border: none;" }) </text> </span>
+</div>

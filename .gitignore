@@ -1,0 +1,13 @@
+/Portal/packages/*
+/Portal/Portal/bin/*
+/Portal/Portal/bin/debug/*
+/Portal/Portal/bin/release/*
+/Portal/Portal/obj/debug/*
+/Portal/Portal/obj/release/*
+/Portal/Portal/obj/x86/*
+
+
+**/*.suo
+*.vs*/
+
+

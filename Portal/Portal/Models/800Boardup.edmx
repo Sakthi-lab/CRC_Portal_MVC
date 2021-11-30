@@ -1,0 +1,407 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CustomerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="NCSM_Aviem_PA_Departments">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="departmentName" Type="nvarchar(max)" />
+          <Property Name="active" Type="bit" />
+        </EntityType>
+        <EntityType Name="NCSM_Canadian_Red_Cross_QC_CityRegion">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="City" Type="nvarchar" MaxLength="255" />
+          <Property Name="Section" Type="nvarchar" MaxLength="255" />
+          <Property Name="Region" Type="nvarchar" MaxLength="255" />
+          <Property Name="SectorNumber" Type="nvarchar" MaxLength="5" />
+          <Property Name="Active" Type="bit" />
+        </EntityType>
+        <EntityType Name="NCSM_CRC_CallerType_External">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallerType" Type="nvarchar" MaxLength="100" />
+          <Property Name="Lang" Type="nvarchar" MaxLength="100" />
+          <Property Name="Active" Type="bit" />
+        </EntityType>
+        <EntityType Name="NCSM_CRC_DUTY_ContactList">
+          <Key>
+            <PropertyRef Name="ContactID" />
+          </Key>
+          <Property Name="ContactID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DutyID" Type="int" />
+          <Property Name="DutyName" Type="nvarchar" MaxLength="250" />
+          <Property Name="Sector" Type="nvarchar" MaxLength="250" />
+          <Property Name="ContactFullName" Type="nvarchar" MaxLength="250" />
+          <Property Name="ContactFirst" Type="nvarchar" MaxLength="255" />
+          <Property Name="ContactLast" Type="nvarchar" MaxLength="255" />
+          <Property Name="ContactCell1" Type="nvarchar" MaxLength="255" />
+          <Property Name="ContactCell2" Type="nvarchar" MaxLength="255" />
+          <Property Name="ContactCell3" Type="nvarchar" MaxLength="255" />
+          <Property Name="ContactCell4" Type="nvarchar" MaxLength="255" />
+          <Property Name="ContactCell5" Type="nvarchar" MaxLength="255" />
+          <Property Name="Residency" Type="nvarchar" MaxLength="255" />
+          <Property Name="Active" Type="bit" />
+        </EntityType>
+        <EntityType Name="NCSM_CRC_DUTY_Officer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Active" Type="bit" />
+          <Property Name="fName" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="NCSM_CRC_Schedule">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="start_ET" Type="datetime" />
+          <Property Name="end_ET" Type="datetime" />
+          <Property Name="start_UTC" Type="datetime" />
+          <Property Name="end_UTC" Type="datetime" />
+          <Property Name="deptID" Type="int" />
+          <Property Name="contactID" Type="int" />
+          <Property Name="sector" Type="nvarchar" MaxLength="50" />
+          <Property Name="rotated" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Customer.dbo.NCSM_CRC_SectorsInSchdule_View' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="NCSM_CRC_SectorsInSchdule_View">
+          <Key>
+            <PropertyRef Name="RowNumber" />
+          </Key>
+          <Property Name="sectornumber" Type="nvarchar" MaxLength="5" />
+          <Property Name="RowNumber" Type="bigint" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Customer.dbo.NCSM_CRC_SectorsInSchdule_View_MissingDays' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="NCSM_CRC_SectorsInSchdule_View_MissingDays">
+          <Key>
+            <PropertyRef Name="RowNumber" />
+          </Key>
+          <Property Name="sectornumber" Type="nvarchar" MaxLength="5" />
+          <Property Name="sector" Type="nvarchar" MaxLength="50" />
+          <Property Name="deptid" Type="int" />
+          <Property Name="MissingDate" Type="varchar" MaxLength="30" />
+          <Property Name="Missing" Type="varchar" MaxLength="1" />
+          <Property Name="RowNumber" Type="bigint" Nullable="false" />
+        </EntityType>
+        <Function Name="CRC_DUTY_Customers_SearchCustomers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ContactName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_NCSM_CRC_SectorsInSchdule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="CustomerModelStoreContainer">
+          <EntitySet Name="NCSM_Aviem_PA_Departments" EntityType="Self.NCSM_Aviem_PA_Departments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NCSM_Canadian_Red_Cross_QC_CityRegion" EntityType="Self.NCSM_Canadian_Red_Cross_QC_CityRegion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NCSM_CRC_CallerType_External" EntityType="Self.NCSM_CRC_CallerType_External" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NCSM_CRC_DUTY_ContactList" EntityType="Self.NCSM_CRC_DUTY_ContactList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NCSM_CRC_DUTY_Officer" EntityType="Self.NCSM_CRC_DUTY_Officer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NCSM_CRC_Schedule" EntityType="Self.NCSM_CRC_Schedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NCSM_CRC_SectorsInSchdule_View" EntityType="Self.NCSM_CRC_SectorsInSchdule_View" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [NCSM_CRC_SectorsInSchdule_View].[sectornumber] AS [sectornumber], 
+    [NCSM_CRC_SectorsInSchdule_View].[RowNumber] AS [RowNumber]
+    FROM [dbo].[NCSM_CRC_SectorsInSchdule_View] AS [NCSM_CRC_SectorsInSchdule_View]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="NCSM_CRC_SectorsInSchdule_View_MissingDays" EntityType="Self.NCSM_CRC_SectorsInSchdule_View_MissingDays" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [NCSM_CRC_SectorsInSchdule_View_MissingDays].[sectornumber] AS [sectornumber], 
+    [NCSM_CRC_SectorsInSchdule_View_MissingDays].[sector] AS [sector], 
+    [NCSM_CRC_SectorsInSchdule_View_MissingDays].[deptid] AS [deptid], 
+    [NCSM_CRC_SectorsInSchdule_View_MissingDays].[MissingDate] AS [MissingDate], 
+    [NCSM_CRC_SectorsInSchdule_View_MissingDays].[Missing] AS [Missing], 
+    [NCSM_CRC_SectorsInSchdule_View_MissingDays].[RowNumber] AS [RowNumber]
+    FROM [dbo].[NCSM_CRC_SectorsInSchdule_View_MissingDays] AS [NCSM_CRC_SectorsInSchdule_View_MissingDays]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CustomerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="CustomerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="NCSM_CRC_DUTY_Officer" EntityType="CustomerModel.NCSM_CRC_DUTY_Officer" />
+          <EntitySet Name="NCSM_Aviem_PA_Departments" EntityType="CustomerModel.NCSM_Aviem_PA_Departments" />
+          <EntitySet Name="NCSM_CRC_CallerType_External" EntityType="CustomerModel.NCSM_CRC_CallerType_External" />
+          <EntitySet Name="NCSM_Canadian_Red_Cross_QC_CityRegion" EntityType="CustomerModel.NCSM_Canadian_Red_Cross_QC_CityRegion" />
+          <EntitySet Name="NCSM_CRC_DUTY_ContactList" EntityType="CustomerModel.NCSM_CRC_DUTY_ContactList" />
+          <FunctionImport Name="CRC_DUTY_Customers_SearchCustomers" ReturnType="Collection(CustomerModel.CRC_DUTY_Customers_SearchCustomers_Result)">
+          <Parameter Name="ContactName" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="NCSM_CRC_Schedule" EntityType="CustomerModel.NCSM_CRC_Schedule" />
+          <FunctionImport Name="sp_NCSM_CRC_SectorsInSchdule" ReturnType="Collection(CustomerModel.sp_NCSM_CRC_SectorsInSchdule_Result)" />
+          <EntitySet Name="NCSM_CRC_SectorsInSchdule_View" EntityType="CustomerModel.NCSM_CRC_SectorsInSchdule_View" />
+          <EntitySet Name="NCSM_CRC_SectorsInSchdule_View_MissingDays" EntityType="CustomerModel.NCSM_CRC_SectorsInSchdule_View_MissingDays" />
+          </EntityContainer>
+        <EntityType Name="NCSM_CRC_DUTY_Officer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+          <Property Name="fName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="NCSM_Aviem_PA_Departments">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="departmentName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="NCSM_CRC_CallerType_External">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallerType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Lang" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="NCSM_Canadian_Red_Cross_QC_CityRegion">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="City" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Section" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Region" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="SectorNumber" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="NCSM_CRC_DUTY_ContactList">
+          <Key>
+            <PropertyRef Name="ContactID" />
+          </Key>
+          <Property Name="ContactID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Sector" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ContactFullName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ContactFirst" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ContactLast" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ContactCell1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ContactCell2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ContactCell3" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ContactCell4" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ContactCell5" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Residency" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+          <Property Name="DutyID" Type="Int32" />
+          <Property Name="DutyName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="CRC_DUTY_Customers_SearchCustomers_Result">
+          <Property Type="Int32" Name="ContactID" Nullable="false" />
+          <Property Type="Int32" Name="DutyID" Nullable="true" />
+          <Property Type="String" Name="DutyName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Sector" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="ContactFullName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="ContactFirst" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="ContactLast" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="ContactCell1" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="ContactCell2" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="ContactCell3" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="ContactCell4" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="ContactCell5" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Residency" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="Active" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="NCSM_CRC_Schedule">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="start_ET" Type="DateTime" Precision="3" />
+          <Property Name="end_ET" Type="DateTime" Precision="3" />
+          <Property Name="start_UTC" Type="DateTime" Precision="3" />
+          <Property Name="end_UTC" Type="DateTime" Precision="3" />
+          <Property Name="deptID" Type="Int32" />
+          <Property Name="contactID" Type="Int32" />
+          <Property Name="sector" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="rotated" Type="Boolean" />
+        </EntityType>
+        <ComplexType Name="sp_NCSM_CRC_SectorsInSchdule_Result">
+          <Property Type="String" Name="sectornumber" Nullable="true" MaxLength="5" />
+          <Property Type="Int64" Name="RowNumber" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="NCSM_CRC_SectorsInSchdule_View">
+          <Key>
+            <PropertyRef Name="RowNumber" />
+          </Key>
+          <Property Name="sectornumber" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="RowNumber" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NCSM_CRC_SectorsInSchdule_View_MissingDays">
+          <Key>
+            <PropertyRef Name="RowNumber" />
+          </Key>
+          <Property Name="sectornumber" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="sector" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="deptid" Type="Int32" />
+          <Property Name="MissingDate" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Missing" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="RowNumber" Type="Int64" Nullable="false" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CustomerModelStoreContainer" CdmEntityContainer="CustomerEntities">
+          <EntitySetMapping Name="NCSM_CRC_DUTY_Officer">
+            <EntityTypeMapping TypeName="CustomerModel.NCSM_CRC_DUTY_Officer">
+              <MappingFragment StoreEntitySet="NCSM_CRC_DUTY_Officer">
+                <ScalarProperty Name="fName" ColumnName="fName" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NCSM_Aviem_PA_Departments">
+            <EntityTypeMapping TypeName="CustomerModel.NCSM_Aviem_PA_Departments">
+              <MappingFragment StoreEntitySet="NCSM_Aviem_PA_Departments">
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="departmentName" ColumnName="departmentName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NCSM_CRC_CallerType_External">
+            <EntityTypeMapping TypeName="CustomerModel.NCSM_CRC_CallerType_External">
+              <MappingFragment StoreEntitySet="NCSM_CRC_CallerType_External">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Lang" ColumnName="Lang" />
+                <ScalarProperty Name="CallerType" ColumnName="CallerType" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NCSM_Canadian_Red_Cross_QC_CityRegion">
+            <EntityTypeMapping TypeName="CustomerModel.NCSM_Canadian_Red_Cross_QC_CityRegion">
+              <MappingFragment StoreEntitySet="NCSM_Canadian_Red_Cross_QC_CityRegion">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="SectorNumber" ColumnName="SectorNumber" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+                <ScalarProperty Name="Section" ColumnName="Section" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NCSM_CRC_DUTY_ContactList">
+            <EntityTypeMapping TypeName="CustomerModel.NCSM_CRC_DUTY_ContactList">
+              <MappingFragment StoreEntitySet="NCSM_CRC_DUTY_ContactList">
+                <ScalarProperty Name="DutyName" ColumnName="DutyName" />
+                <ScalarProperty Name="DutyID" ColumnName="DutyID" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Residency" ColumnName="Residency" />
+                <ScalarProperty Name="ContactCell5" ColumnName="ContactCell5" />
+                <ScalarProperty Name="ContactCell4" ColumnName="ContactCell4" />
+                <ScalarProperty Name="ContactCell3" ColumnName="ContactCell3" />
+                <ScalarProperty Name="ContactCell2" ColumnName="ContactCell2" />
+                <ScalarProperty Name="ContactCell1" ColumnName="ContactCell1" />
+                <ScalarProperty Name="ContactLast" ColumnName="ContactLast" />
+                <ScalarProperty Name="ContactFirst" ColumnName="ContactFirst" />
+                <ScalarProperty Name="ContactFullName" ColumnName="ContactFullName" />
+                <ScalarProperty Name="Sector" ColumnName="Sector" />
+                <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CRC_DUTY_Customers_SearchCustomers" FunctionName="CustomerModel.Store.CRC_DUTY_Customers_SearchCustomers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CustomerModel.CRC_DUTY_Customers_SearchCustomers_Result">
+                <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+                <ScalarProperty Name="DutyID" ColumnName="DutyID" />
+                <ScalarProperty Name="DutyName" ColumnName="DutyName" />
+                <ScalarProperty Name="Sector" ColumnName="Sector" />
+                <ScalarProperty Name="ContactFullName" ColumnName="ContactFullName" />
+                <ScalarProperty Name="ContactFirst" ColumnName="ContactFirst" />
+                <ScalarProperty Name="ContactLast" ColumnName="ContactLast" />
+                <ScalarProperty Name="ContactCell1" ColumnName="ContactCell1" />
+                <ScalarProperty Name="ContactCell2" ColumnName="ContactCell2" />
+                <ScalarProperty Name="ContactCell3" ColumnName="ContactCell3" />
+                <ScalarProperty Name="ContactCell4" ColumnName="ContactCell4" />
+                <ScalarProperty Name="ContactCell5" ColumnName="ContactCell5" />
+                <ScalarProperty Name="Residency" ColumnName="Residency" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="NCSM_CRC_Schedule">
+            <EntityTypeMapping TypeName="CustomerModel.NCSM_CRC_Schedule">
+              <MappingFragment StoreEntitySet="NCSM_CRC_Schedule">
+                <ScalarProperty Name="rotated" ColumnName="rotated" />
+                <ScalarProperty Name="sector" ColumnName="sector" />
+                <ScalarProperty Name="contactID" ColumnName="contactID" />
+                <ScalarProperty Name="deptID" ColumnName="deptID" />
+                <ScalarProperty Name="end_UTC" ColumnName="end_UTC" />
+                <ScalarProperty Name="start_UTC" ColumnName="start_UTC" />
+                <ScalarProperty Name="end_ET" ColumnName="end_ET" />
+                <ScalarProperty Name="start_ET" ColumnName="start_ET" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_NCSM_CRC_SectorsInSchdule" FunctionName="CustomerModel.Store.sp_NCSM_CRC_SectorsInSchdule">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CustomerModel.sp_NCSM_CRC_SectorsInSchdule_Result">
+                <ScalarProperty Name="sectornumber" ColumnName="sectornumber" />
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="NCSM_CRC_SectorsInSchdule_View">
+            <EntityTypeMapping TypeName="CustomerModel.NCSM_CRC_SectorsInSchdule_View">
+              <MappingFragment StoreEntitySet="NCSM_CRC_SectorsInSchdule_View">
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="sectornumber" ColumnName="sectornumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NCSM_CRC_SectorsInSchdule_View_MissingDays">
+            <EntityTypeMapping TypeName="CustomerModel.NCSM_CRC_SectorsInSchdule_View_MissingDays">
+              <MappingFragment StoreEntitySet="NCSM_CRC_SectorsInSchdule_View_MissingDays">
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="Missing" ColumnName="Missing" />
+                <ScalarProperty Name="MissingDate" ColumnName="MissingDate" />
+                <ScalarProperty Name="deptid" ColumnName="deptid" />
+                <ScalarProperty Name="sector" ColumnName="sector" />
+                <ScalarProperty Name="sectornumber" ColumnName="sectornumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

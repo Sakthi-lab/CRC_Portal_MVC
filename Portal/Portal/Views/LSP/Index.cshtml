@@ -1,0 +1,87 @@
+﻿@model PagedList.IPagedList<Portal.Models.NCSM_CRC_Schedule>
+
+<style>
+    .hoverTD:hover {
+        background-color: #00FF00;
+    }
+</style>
+
+
+<style>
+    .hoverTD:hover {
+        background-color: #00FF00;
+    }
+
+    .activePlan {
+        background-color: #a6e5fc;
+    }
+</style>
+
+<div>
+
+    <div style="font-family: Arial; font-size: 28px; font-weight: bold; text-align:center;">@ViewBag.name</div>
+
+
+</div>
+
+
+<select id="SectorName" name="SectorName" size="1" onchange="showDiv('hidden_div', this)">
+    <option value=""></option>
+
+
+    @foreach (var Sector in ViewBag.SectorNumber)
+    {
+        <option value="@Sector.sectornumber">@Sector.sectornumber</option>
+    }
+
+</select><br /><br /><br />
+
+<div id="DelConf" title="Confirm Delete">
+    <input type="hidden" id="delRec" name="delRec" value="" />
+    <span id="delMsg"></span>
+</div>
+
+<script>
+
+    $(".Nbtn").button();
+    $(".Ebtn").button();
+    $(".Dbtn").button();
+
+
+    $(".Nbtn").click(function () {
+        location.href = "@Href("~/Departments/Add/")";
+    });
+
+    $(".Ebtn").click(function () {
+        location.href = "@Href("~/Departments/Edit/")" + $(this).attr("rec");
+    });
+
+    $(".Dbtn").click(function () {
+        $("#delRec").val($(this).attr("rec"));
+        $("#delMsg").html("Deleting this department will also delete any contacts and schedules linked to this department.<br>&nbsp;<br>Are you sure you want to delete \"" + $(this).attr("deptName") + "\"?");
+        $("#DelConf").dialog("open");
+    });
+
+
+    $(function () {
+
+        $('#DelConf').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 450,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Cancel": function () {
+                    $(this).dialog("close");
+                },
+                "Delete": function () {
+                    location.href = "@Href("~/Departments/Delete/")" + $("#delRec").val();
+                },
+            }
+        });
+
+    });
+
+
+</script>

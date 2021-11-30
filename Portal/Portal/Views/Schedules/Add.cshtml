@@ -1,0 +1,278 @@
+﻿@using Portal.Models;
+@model Portal.Models.NCSM_CRC_DUTY_Officer
+
+@{
+    var d = Model;
+    CustomerEntities db = new CustomerEntities();
+
+    var dept = db.NCSM_CRC_DUTY_Officer.Where(w => w.ID == d.ID).FirstOrDefault();
+    var conts = db.NCSM_CRC_DUTY_ContactList.Where(w => w.Active == true).OrderBy(o => o.ContactFullName);
+}
+@{
+    CustomerEntities db2 = new CustomerEntities();
+
+    var SectorNumber = db2.NCSM_Canadian_Red_Cross_QC_CityRegion.Where(w => w.Active == true).Select(o => new { sector = o.SectorNumber }).Distinct().OrderBy(o => o.sector);
+   
+}
+<style>
+    #hidden_div {
+        text-align: center;
+        display: none;
+    }
+</style>
+<script src="@Href("~/Scripts/jquery.simple-dtpicker.js")"></script>
+<link href="@Href("~/Content/jquery.simple-dtpicker.css")" rel="stylesheet" />
+
+<script src="@Href("~/Scripts/jquery.datetimepicker.full.min.js")"></script>
+<link href="@Href("~/Content/jquery.datetimepicker.css")" rel="stylesheet" />
+<script src="@Href("~/Scripts/jquery.ui.timepicker.js")"></script>
+
+<div style="width: 900px; margin: 0 auto; text-align: center;">
+    <span class="site-title">
+        <span class="English">   Add On Call Schedule</span>
+        <span class="French">
+            Ajouter un programme d'appel
+        </span>
+
+      
+    </span><br /><span class="dept-title">@dept.Name</span>
+    <br />&nbsp;<br />
+</div>
+
+
+<form id="addSchedule" name="addSchedule" method="post" action="@Href("~/Schedules/AddNew")">
+    <input type="hidden" id="ID" name="ID" value="@d.ID" />
+
+
+    <div style="margin: 0 auto; text-align: center;">
+        <span style="color:red;"> *</span>
+        <span class="English">  Start Date/Time:</span>
+        <span class="French">
+            Date/heure de début :
+        </span>
+        <input name="start_ET" type="text" id="start_ET" style="width: 150px;" readonly="readonly" onchange="startDateCheck(this)" /><br /><br />
+
+        <span style="color:red;">* </span>*
+        <span class="English"> End Date/Time:</span>
+        <span class="French">
+            Date/heure de fin :
+        </span>
+        <input name="end_ET" type="text" id="end_ET" style="width: 150px;" readonly="readonly" /><br /><br />
+
+        <span style="color:red;">*</span>
+        <span class="English">Contact:</span>
+        <span class="French">
+            Contact:
+        </span>
+        <select id="contactID" name="contactID" size="1">
+            <option value=""></option>
+
+            @foreach (var cont in conts)
+            {
+
+                <option value="@cont.ContactID">@cont.ContactFullName</option>
+
+            }
+
+        </select><br /><br />
+
+
+
+        <div style="display:@(dept.Name=="Regular" ? "block":"none")">
+            <span style="color:red;">*</span>
+            <span class="English">Sector:</span>
+            <span class="French">
+                Secteur:
+            </span>
+            <select id="Sector" name="Sector" size="1">
+                <option value=""></option>
+
+
+                @foreach (var SectorNumbers in SectorNumber)
+                {
+                    <option value="@SectorNumbers.sector">@SectorNumbers.sector</option>
+                }
+
+
+            </select><br /><br /><br /><br />
+        </div>
+
+        <span class="doAdd" style="font-size:12px;"><span class="English">Save Changes</span><span class="French">Sauvegarder les modifications</span></span>
+
+        <!--   <input type="button" id="doAdd" name="doAdd" value="Save Changes" style="font-size:14px;" />-->
+        <span class="cancelEdit" style="font-size:12px;"><span class="English">Cancel Add</span><span class="French"> Annuler Ajouter</span></span>
+
+        <input type="hidden" id="regSec" name="regSec" value="@dept.Name" />
+    </div>
+</form>
+
+<div id="processing" style="text-align:center; display:none;">
+    <img src="~/Content/images/processing.gif" />
+</div>
+
+<div id="ValErr" title="Error">
+    <span id="valflderror"></span>
+</div>
+
+<script>
+    function startDateCheck(element) {
+        if ($("#start_ET").val() > $("#DateCreated").val()) {
+            $("#MisDates").html(' planning past the threshold (more than a week).');
+            $("#MisDates").dialog("open");
+
+        }
+    }
+
+    $(".doAdd").button();
+    $(".cancelEdit").button();
+
+  
+
+
+    $(".doAdd").click(function () {
+
+        var checkDate = new Date();
+        checkDate.setDate(checkDate.getDate() + 7);
+
+        // Convert Start/End Time to TimeSpan
+        if ($("#start_ET").val() == "") {
+            $("#valflderror").html('Please select a Start Date/Time.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+
+        if ($("#start_ET").val() > $("#DateCreated").val()) {
+            $("#MisDates").html(' planning past the threshold (more than a week).');
+            $("#MisDates").dialog("open");
+
+        }
+
+        if ($("#end_ET").val() == "") {
+            $("#valflderror").html('Please enter an End Date/Time.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+
+        if ($("#start_ET").val() >= $("#end_ET").val()) {
+            $("#valflderror").html('Please correct Start and End Date/Time.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+        if ($("#end_ET").val() <= $("#start_ET").val()) {
+            $("#valflderror").html('Please correct Start and End Date/Time.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+        if ($("#contactID").val() == "") {
+            $("#valflderror").html('Please select a Contact.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+
+        if ($("#phone").val() == "") {
+            $("#valflderror").html('Please enter a valid Phone Number.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+        if ($("#regSec").val() == "Regular") {
+            if($("#Sector").val() == "") {
+            $("#valflderror").html('Please enter a valid Sector.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+
+    }
+        
+
+        $("#addSchedule").submit();
+
+
+    });
+
+
+    $(".cancelEdit").click(function () {
+        location.href = "@Href("~/Schedules/BackToSchedule/")@d.ID"
+    });
+  
+
+    $('#start_ET').datetimepicker({
+        step: 1,
+        format: 'm/d/Y H:i',
+        minDate: '@DateTime.Now',
+        onShow: function (ct) {
+            this.setOptions({
+                maxDate: jQuery('#end_ET').val() ? jQuery('#end_ET').val() : false
+            })
+        },
+        onSelect: function (selected) {
+            var dt = new Date(selected);
+            $("#end_ET").datetimepicker("option", "minDate", dt);
+        }
+    });
+
+
+    $('#end_ET').datetimepicker({
+        step: 1,
+        format: 'm/d/Y H:i',
+        minDate: '@DateTime.Now',
+        onShow: function (ct) {
+            this.setOptions({
+                minDate: jQuery('#start_ET').val() ? jQuery('#start_ET').val() : false
+            })
+        }
+    });
+    $(function () {
+
+        $('#ValErr').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 450,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                },
+            }
+        });
+
+
+
+        $('#MisDates').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 300,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                },
+            }
+        });
+
+      
+
+      
+
+    });
+
+
+
+
+  
+</script>
+
+
+<div id="MisDates" title="Missing Scheduling Sector">
+
+    
+
+    <text>@Html.Hidden("DateCreated", (DateTime.Today).AddDays(8), new { @readonly = "readonly", @style = "border: none;" }) </text>
+
+    <br />
+
+
+
+
+</div>

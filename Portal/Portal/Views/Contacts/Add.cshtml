@@ -1,0 +1,171 @@
+﻿@using Portal.Models;
+@model Portal.Models.NCSM_CRC_DUTY_ContactList
+
+
+@{
+    CustomerEntities db1 = new CustomerEntities();
+
+    var callerType = db1.NCSM_CRC_DUTY_Officer.Where(w => w.Active == true).OrderBy(o => o.Name);
+}
+
+@{
+    CustomerEntities db2 = new CustomerEntities();
+
+    var SectorNumber = db2.NCSM_Canadian_Red_Cross_QC_CityRegion.Where(w => w.Active == true).Select(o => new { sector = o.SectorNumber }).Distinct().OrderBy(o => o.sector);
+
+   
+}
+<script src="@Href("~/Scripts/jquery.maskedinput.js")"></script>
+
+<div style="width: 900px; margin: 0 auto; text-align: center;">
+    <span class="site-title">
+        <span class="English"> Add Contact</span>
+        <span class="French">
+            Ajouter le contact
+        </span>
+
+       
+    </span>
+    <br />&nbsp;<br />
+</div>
+
+
+<form id="addContact" name="addContact" method="post" action="@Href("~/Contacts/AddNew")">
+   
+    <div style="margin: 0 auto; text-align: center;">
+        <span style="color:red;">* </span>
+        <span class="English">Name:</span>
+        <span class="French">
+            Nom:
+        </span>
+
+
+
+
+        &nbsp;&nbsp;&nbsp;
+        <input type="text" id="ContactFullName" name="ContactFullName" /> <br /> <br />
+
+        <span style="color:red;">* </span>
+        <span class="English">ContactCell1:</span>
+        <span class="French">
+            Cellulaire (1) SMS
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <input type="text" id="ContactCell1" name="ContactCell1" /><br /><br />
+
+        <span class="English">ContactCell2:</span>
+        <span class="French">
+            Cellulaire (2)
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <input type="text" id="ContactCell2" name="ContactCell2" /><br /><br />
+
+        <span class="English">Residency:</span>
+        <span class="French">
+            Résidence
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <input type="text" id="Residency" name="Residency" /><br /><br />
+        <span class="English">ContactCell3:</span>
+        <span class="French">
+            Cellulaire (3)
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <input type="text" id="ContactCell3" name="ContactCell3" /><br /><br />
+        <span class="English">ContactCell4:</span>
+        <span class="French">
+            Cellulaire (4)
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <input type="text" id="ContactCell4" name="ContactCell4" /><br /><br />
+        <span class="English">ContactCell5:</span>
+        <span class="French">
+            Cellulaire (5)
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <input type="text" id="ContactCell5" name="ContactCell5" /><br /><br />
+        <span class="doAdd" style="font-size:12px;"><span class="English">Save Changes</span><span class="French">Sauvegarder les modifications</span></span>
+
+        <!--   <input type="button" id="doAdd" name="doAdd" value="Save Changes" style="font-size:14px;" />-->
+        <span class="cancelEdit" style="font-size:12px;">
+            <span class="English">Cancel Add</span><span class="French">
+                Annuler Ajouter
+            </span>
+        </span>
+
+    </div>
+       
+</form>
+
+<div id="ValErr" title="Error">
+    <span id="valflderror"></span>
+</div>
+
+
+<script>
+
+    $("#ContactCell1").mask("(999) 999-9999", { placeholder: "_" });
+
+    $("#ContactCell2").mask("(999) 999-9999", { placeholder: "_" });
+    $("#Residency").mask("(999) 999-9999", { placeholder: "_" });
+    $("#ContactCell3").mask("(999) 999-9999", { placeholder: "_" });
+    $("#ContactCell4").mask("(999) 999-9999", { placeholder: "_" });
+    $("#ContactCell5").mask("(999) 999-9999", { placeholder: "_" });
+
+    $(".doAdd").button();
+    $(".cancelEdit").button();
+
+    $(".doAdd").click(function () {
+
+        if ($("#ContactFullName").val() == "") {
+            $("#valflderror").html('Please enter a Name.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+
+        if ($("#ContactCell1").val() == "") {
+            $("#valflderror").html('Please enter a valid Phone Number.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+
+       if ($("#DutyName").val() == "") {
+            $("#valflderror").html('Please enter a valid DutyRole.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+        if ($("#DutyName").val() == "Regular") {
+            if ($("#Sector").val() == "") {
+                $("#valflderror").html('Please enter a valid Sector.');
+                $("#ValErr").dialog("open");
+                return false;
+            }
+        }
+
+        $("#addContact").submit();
+
+    });
+
+    $(".cancelEdit").click(function () {
+        location.href = "@Href("~/Contacts")"
+    });
+
+
+    $(function () {
+
+        $('#ValErr').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 450,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                },
+            }
+        });
+
+    });
+   
+</script>

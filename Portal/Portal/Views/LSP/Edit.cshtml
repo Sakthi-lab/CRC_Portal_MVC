@@ -1,0 +1,105 @@
+﻿@using Portal.Models;
+@model Portal.Models.NCSM_Aviem_PA_Departments
+
+
+    <div style="width: 900px; margin: 0 auto; text-align: center;">
+        <span class="site-title">Edit Department</span>
+        <br />&nbsp;<br />
+    </div>
+
+
+<form id="editDepartment" name="editDepartment" method="post" action="@Href("~/Departments/Update/")@Model.ID">
+<table style="width:800px; text-align: center; margin: 0 auto; font-family: Arial; font-size: 1.15em;">
+
+
+              <tr>
+                <td style="width:300px; text-align: right; vertical-align: top;"><span style="color:red;">* </span>Department Name: </td>
+                <td style="text-align: left; vertical-align: top;"><input type="text" id="departmentName" name="departmentName" value="@Model.departmentName" /></td>
+                </tr>
+
+              <tr>
+                <td style="width:300px; text-align: right; vertical-align: top;"><span style="color:red;">* </span>Active: </td>
+                <td style="text-align: left; vertical-align: top;">
+                    <select id="active" name="active">
+                        <option value="True" @if (Model.active == true)
+                                             { <text>selected</text> }>Yes</option>
+                        <option value="False" @if (Model.active == false)
+                                              { <text>selected</text> }>No</option>
+                    </select>
+                </td>
+                </tr>
+
+
+
+              <tr>
+                <td colspan="2">&nbsp;</td>
+                </tr>
+
+              <tr>
+                <td style="text-align: center;" colspan="2"><input type="button" id="doAdd" name="doAdd" value="Save Changes" style="font-size:14px;" /></td>
+                </tr>
+
+              <tr>
+                <td colspan="2">&nbsp;</td>
+                </tr>
+
+              <tr>
+                <td style="text-align: center;" colspan="2"><input type="button" id="cancelEdit" name="cancelEdit" value="Cancel Edit" style="font-size:14px;" /></td>
+                </tr>
+
+              <tr>
+                <td colspan="2">&nbsp;</td>
+                </tr>
+
+</table>
+
+    </form>
+
+<div id="ValErr" title="Error">
+    <span id="valflderror"></span>
+</div>
+
+
+<script>
+
+    $("#doAdd").button();
+    $("#cancelEdit").button();
+
+    $("#doAdd").click(function () {
+
+        if ($("#departmentName").val() == "") {
+            $("#valflderror").html('Please enter a Department Name.');
+            $("#ValErr").dialog("open");
+            return false;
+        }
+
+
+        $("#editDepartment").submit();
+
+
+    });
+
+
+    $("#cancelEdit").click(function () {
+        location.href = "@Href("~/Departments/")";
+    });
+
+    $(function () {
+
+        $('#ValErr').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 450,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                },
+            }
+        });
+
+    });
+
+</script>
+

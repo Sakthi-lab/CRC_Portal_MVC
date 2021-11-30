@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Canadian Red Cross</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/Content/themes/redmond/jquery-ui-1.10.1.custom.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/Content/slidemenu/css/component.css" />
+    <link href="~/Content/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="@Href("~/Scripts/jquery-1.9.1.js")"></script>
+    <script src="@Href("~/Scripts/jquery-ui-1.10.1.custom.js")"></script>
+    <script src="@Href("~/Scripts/jquery.numeric.js")"></script>
+    <script src="@Href("~/Scripts/jquery.maskedinput.js")"></script>
+    <script src="@Href("~/Scripts/jquery.ui.timepicker.js")"></script>
+    <script src="~/Content/slidemenu/js/modernizr.custom.js"></script>
+    <script src="~/Content/js/modernizr-custom.js"></script>
+
+    @*@if (Request.Cookies["loggedin"] == null)
+     {
+        <script type="text/javascript" >
+            parent.location.href = "/@HttpContext.Current.Request.Cookies["Client"].Value/LogOff";
+        </script>
+     }*@
+
+</head>
+    <body>
+        <header>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <span class="English">   <span class="site-title">Canadian Red Cross</span></span>
+                    <span class="French">   <span class="site-title">Croix-Rouge canadienne</span></span>
+                </div>
+                <div class="float-right">
+
+                    <select id="lang">
+                        <option value="French">French</option>
+                        <option value="English">English</option>
+                    </select>
+
+                    <br />
+                    <span class="English">
+                        <nav>
+                            <ul id="menu">
+                                @*<li>@Html.ActionLink("LSP", "Index", "LSP")</li>*@
+
+                                <li>@Html.ActionLink("Contacts", "Index", "Contacts")</li>
+
+
+                                <li>@Html.ActionLink("Schedules", "Index", "Schedules")</li>
+                            </ul>
+                        </nav>
+                    </span>
+                    <span class="French">
+                        <nav>
+                            <ul id="menu">
+                                @*<li>@Html.ActionLink("LSP", "Index", "LSP")</li>*@
+
+                                <li>@Html.ActionLink("Bottin", "Index", "Contacts")</li>
+
+
+                                <li>@Html.ActionLink("Des horaires", "Index", "Schedules")</li>
+                            </ul>
+                        </nav>
+                    </span>
+                </div>
+            </div>
+        </header>
+        <div id="body">
+            @RenderSection("featured", required: false)
+            <section class="content-wrapper main-content clear-fix">
+                @RenderBody()
+            </section>
+        </div>
+
+
+       
+    </body>
+    <script>
+
+    
+
+    @if (Request.Cookies["Language"] == null)
+    {
+        <text>var lng = "French";</text>
+    } else {
+
+    <text>var lng = "@Request.Cookies["Language"].Value";</text>
+    }
+
+
+        $("#lang").change(function () {
+            document.cookie = "Language=" + $("#lang").val() + ";";
+            lng = $("#lang").val();
+            //alert(lng);
+            setLang();
+
+        });
+
+
+        //alert(lng);
+
+        function setLang() {
+
+            if (lng == "English") {
+                $(".English").show();
+                $(".French").hide();
+
+            } else {
+                $(".French").show();
+                $(".English").hide();
+            }
+
+        }
+
+
+        $(function () {
+            setLang();
+            $("#lang").val(lng)
+
+        });
+
+    </script>
+
+</html>

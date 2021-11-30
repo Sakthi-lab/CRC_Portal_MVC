@@ -1,0 +1,342 @@
+﻿@using System.Configuration
+@using Portal.Models;
+@model Portal.Models.NCSM_CRC_DUTY_Officer
+
+@{
+    var d = Model;
+    CustomerEntities db = new CustomerEntities();
+    var curDate = DateTime.UtcNow;
+    var scheds = db.NCSM_CRC_Schedule.Where(w => w.deptID == d.ID);
+    var dept = db.NCSM_CRC_DUTY_Officer.Where(w => w.ID == d.ID).FirstOrDefault();
+    var missingsch=db.NCSM_CRC_SectorsInSchdule_View_MissingDays.Where(w => w.Missing == "Y" && w.deptid == d.ID).OrderBy(o => o.sector);
+
+}
+
+
+@{
+    var d1 = Model;
+    CustomerEntities db1 = new CustomerEntities();
+
+
+
+}
+
+@{
+
+    ViewBag.Title = "ViewSchedule";
+}
+<style>
+    .hoverTD:hover {
+        background-color: #00FF00;
+    }
+</style>
+
+
+
+<div style="width: 900px; margin: 0 auto; text-align: center;">
+    <span class="site-title">
+        <span class="English">   On Call Schedules</span>
+        <span class="French"> Horaires d'appel</span>
+
+      
+    </span><br /><span class="dept-title">@dept.Name</span>
+    <br />&nbsp;<br />
+
+    <br />
+</div>
+
+<div style="width:1200px; margin: 0 auto; padding-bottom:20px;">
+    <span style="float:left"><span class="backBtn" style="font-size:12px;">
+                                 <span class="English">    Back</span>
+                                 <span class="French">
+                                     Arrière
+                                 </span>
+  
+</span></span>
+    <span style="float:right">
+    <span class="newBtn" style="font-size:12px;">
+
+                                  <span class="English"> New Schedule</span>
+                                  <span class="French">   Nouveau programme    </span>
+
+   
+</span></span>
+</div>
+<br />
+
+<select id="SectorName" name="SectorName" size="1" style="display:none">
+    <option value=""></option>
+
+
+    @foreach (var Sector in (List<string>)ViewData["SectorNumber"])
+    {
+        <option value="@Sector">@Sector</option>
+    }
+
+</select><br /><br /><br />
+
+
+
+<table id="schedules" style="width: 1200px; background-color: #FFFFFF; border-collapse: collapse; border-style: solid; border-width: 1px; margin: 0 auto;">
+    <thead>
+        <tr>
+            <th class="tableHeader" style="background-color: #00a9ec; font-family: Arial; color:#FFFFFF;" colspan="16">
+                <span class="English">   On Call Contacts</span>
+                <span class="French">
+                    Contacts d'appel
+                </span>
+              
+            </th>
+        </tr>
+
+
+        <tr style="background-color: #FFFFCC; font-family: Arial; ">
+            <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
+                <span class="English">  Start</span>
+                <span class="French">
+                    Début
+                </span>                
+            </td>
+            <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
+                <span class="English"> End</span>
+                <span class="French"> Finir </span>
+                
+            </td>
+            <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
+                <span class="English"> Name</span>
+                <span class="French"> Nom</span>
+            </td>
+            <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
+                <span class="English"> Phone</span>
+                <span class="French"> Téléphone</span>
+            </td>
+            <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
+                <span class="English"> Sector</span>
+                <span class="French"> Secteur</span>
+            </td>
+        
+            <td style="width: 65px; font-weight:bold; border: 1px solid; text-align:center;">&nbsp;</td>
+            <td style="width: 75px; font-weight:bold; border: 1px solid; text-align:center;">&nbsp;</td>
+        </tr>
+    </thead>
+
+    @foreach (var sched in scheds)
+    {
+
+        var cont = db.NCSM_CRC_DUTY_ContactList.Where(w => w.ContactID == sched.contactID).FirstOrDefault();
+
+
+        <tr style="font-family: Arial;" class="hoverTD">
+            <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@sched.start_ET</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@sched.end_ET</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@cont.ContactFullName</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@cont.ContactCell1</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@sched.sector</span></td>
+            <td style="border: 1px solid; text-align:center;">
+
+                <span class="English">
+                    <span rec="@sched.ID.ToString()" class="Ebtn" style="font-size:12px;">Edit</span>
+
+                </span>
+                <span class="French">
+                    <span rec="@sched.ID.ToString()" class="Ebtn" style="font-size:12px;">
+                        Éditer
+                    </span>                    
+                </span>
+            </td>
+            <td style="border: 1px solid; text-align:center;">
+                <span class="English">
+                    <span rec="@sched.ID.ToString()" schedName="@sched.start_ET" class="Dbtn" style="font-size:12px;">Delete</span>
+
+                </span>
+                <span class="French">
+                    <span rec="@sched.ID.ToString()" schedName="@sched.start_ET" class="Dbtn" style="font-size:12px;">
+                        Effacer
+                    </span>
+                </span>            
+            </td>
+        </tr>
+
+    }
+
+</table>
+<br /><br />
+<div style="display:@(dept.Name=="Regular" ? "block":"none")">
+    <table id="schedules" style="width: 1200px; background-color: #FFFFFF; border-collapse: collapse; border-style: solid; border-width: 1px; margin: 0 auto;">
+
+        <tr>
+            <th class="tableHeader" style="background-color: #00a9ec; font-family: Arial; color:#FFFFFF;" colspan="16">
+                <span class="English">  Missing Dates for the Scheduled Sectors</span>
+                <span class="French"> Dates manquantes pour les secteurs programmés</span>
+               
+            </th>
+        </tr>
+
+
+        <tr style="background-color: #FFFFCC; font-family: Arial; ">
+            <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
+                <span class="English">Sectors</span>
+                <span class="French"> secteurs</span>
+                
+            </td>
+            <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
+                <span class="English"> Missing Dates</span>
+                <span class="French"> Dates manquantes</span>
+
+               
+            </td>
+        </tr>
+        @foreach (var miss in missingsch)
+        {
+        <tr style="font-family: Arial;" class="hoverTD">
+            <td style="border: 1px solid; text-align:left;"><span rec="">@miss.sector</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="">@miss.MissingDate</span></td>
+        </tr>
+                }
+
+        </table>
+   
+</div>
+
+
+
+<div id="DelConf" title="Confirm Delete">
+    <input type="hidden" id="delRec" name="delRec" value="" />
+    <span id="delMsg"></span>
+</div>
+
+<form id="addSchedule" name="addSchedule" method="post" action="@Href("~/Schedules/Add")">
+    <input type="hidden" id="ID" name="ID" value="@d.ID" />
+</form>
+
+<script>
+
+    $(".newBtn").button();
+    $(".backBtn").button();
+    $(".Ebtn").button();
+    $(".Dbtn").button();
+
+    $(".newBtn").click(function () {
+        $("#addSchedule").submit();
+    });
+
+    $(".Ebtn").click(function () {
+        location.href = "@Href("~/Schedules/Edit/")" + $(this).attr("rec");
+    });
+
+    $(".backBtn").click(function () {
+        location.href = "@Href("~/Schedules/")";
+    });
+
+    $(".Dbtn").click(function () {
+        $("#delRec").val($(this).attr("rec"));
+        $("#delMsg").html("Are you sure you want to delete \"" + $(this).attr("schedName") + "\"?");
+        $("#DelConf").dialog("open");
+    });
+
+
+
+    $(function () {
+
+        $('#DelConf').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 450,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Cancel": function () {
+                    $(this).dialog("close");
+                },
+                "Delete": function () {
+                    location.href = "@Href("~/Schedules/Delete/")" + $("#delRec").val();
+                },
+            }
+        });
+
+
+
+
+           $('#MisSector').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 305,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                },
+            }
+        });
+
+
+        $('#MisDates').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 505,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                },
+            }
+        });
+
+
+
+        @if (ViewBag.checksector == true)
+        {
+           <text> $("#MisSector").dialog("open");</text>
+        }
+
+        @if (ViewBag.datecheck == true)
+        {
+           <text> $("#MisDates").dialog("open");</text>
+            
+        }
+         
+    });
+
+
+
+
+
+
+</script>
+
+<div id="MisSector" title="Missing Scheduling Sector">
+    Below sectors are not scheduled(s):
+    <br>&nbsp;<br>
+
+
+    <text> @ViewBag.allsector </text><br />
+
+
+    <br />
+
+
+
+
+</div>
+
+<div id="MisDates" title="Missing Dates">
+    Below Dates are missing in the schedule(s):
+    <br>&nbsp;<br>
+              <table>
+                  <tr>
+                      <td>
+
+                          <text> @ViewBag.MissingDates </text> <br>&nbsp;<br>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+
+                          <text> @ViewBag.MissingAvailSec </text>
+                      </td>
+                  </tr>
+              </table>
+</div>
+
