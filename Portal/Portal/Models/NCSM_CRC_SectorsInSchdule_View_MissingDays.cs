@@ -17,7 +17,9 @@ namespace Portal.Models
         public string sectornumber { get; set; }
         public string sector { get; set; }
         public Nullable<int> deptid { get; set; }
-        public string MissingDate { get; set; }
+        public Nullable<System.DateTime> ScheduleEnds { get; set; }
+        public Nullable<System.DateTime> ScheduleStartsNext { get; set; }
+        public string missing_comment { get; set; }
         public string Missing { get; set; }
         public long RowNumber { get; set; }
     }

@@ -12,7 +12,11 @@
     CustomerEntities db2 = new CustomerEntities();
 
     var SectorNumber = db2.NCSM_Canadian_Red_Cross_QC_CityRegion.Where(w => w.Active == true).Select(o => new { sector = o.SectorNumber }).Distinct().OrderBy(o => o.sector);
-   
+
+}
+@{
+
+    ViewBag.Title = "ViewSchedule";
 }
 <style>
     #hidden_div {
@@ -34,7 +38,7 @@
             Ajouter un programme d'appel
         </span>
 
-      
+
     </span><br /><span class="dept-title">@dept.Name</span>
     <br />&nbsp;<br />
 </div>
@@ -126,7 +130,7 @@
     $(".doAdd").button();
     $(".cancelEdit").button();
 
-  
+
 
 
     $(".doAdd").click(function () {
@@ -182,7 +186,7 @@
         }
 
     }
-        
+
 
         $("#addSchedule").submit();
 
@@ -193,7 +197,7 @@
     $(".cancelEdit").click(function () {
         location.href = "@Href("~/Schedules/BackToSchedule/")@d.ID"
     });
-  
+
 
     $('#start_ET').datetimepicker({
         step: 1,
@@ -251,22 +255,22 @@
             }
         });
 
-      
 
-      
+
+
 
     });
 
 
 
 
-  
+
 </script>
 
 
 <div id="MisDates" title="Missing Scheduling Sector">
 
-    
+
 
     <text>@Html.Hidden("DateCreated", (DateTime.Today).AddDays(8), new { @readonly = "readonly", @style = "border: none;" }) </text>
 

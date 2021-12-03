@@ -17,14 +17,16 @@ namespace Portal.Controllers
 
         public ActionResult Index()
         {
-
+            if (Request.Cookies["loggedin"] != null)
+                Response.Cookies["loggedin"].Expires = DateTime.Now.AddMinutes(15);
             return View();
         }
 
 
         public ActionResult Add(NCSM_CRC_DUTY_Officer d)
         {
-
+            if (Request.Cookies["loggedin"] != null)
+                Response.Cookies["loggedin"].Expires = DateTime.Now.AddMinutes(15);
             return View(d);
         }
 
@@ -32,14 +34,17 @@ namespace Portal.Controllers
         [HttpPost]
         public ActionResult AddNew(NCSM_CRC_Schedule ns)
         {
-            CustomerEntities db = new CustomerEntities();
+            if (Request.Cookies["loggedin"] != null)
+                Response.Cookies["loggedin"].Expires = DateTime.Now.AddMinutes(15);
 
+            CustomerEntities db = new CustomerEntities();
+            ViewBag.DupDateTimeSector = false;
             try
             {
                 string TZ = ConfigurationManager.AppSettings["TZ"];
                 NCSM_CRC_Schedule ads = new NCSM_CRC_Schedule();
-                var sectorId = db.NCSM_CRC_DUTY_ContactList.Where(w => w.ContactID == ns.contactID).FirstOrDefault(); ;
-
+                var sectorId = db.NCSM_CRC_DUTY_ContactList.Where(w => w.ContactID == ns.contactID).FirstOrDefault(); 
+             
                 ads.deptID = ns.ID;
                 ads.contactID = ns.contactID;
                 ads.start_ET = ns.start_ET;
@@ -49,9 +54,20 @@ namespace Portal.Controllers
                 ads.rotated = false;
                 ads.sector = ns.sector;
 
-                db.NCSM_CRC_Schedule.Add(ads);
-                db.SaveChanges();
+               // var sch = db.NCSM_CRC_Schedule.Where(w =>(( w.start_ET>=ns.start_ET && w.start_ET <= ns.end_ET) || (w.start_ET < ns.start_ET && w.end_ET>=ns.end_ET)) && w.sector==ns.sector).ToList();
+           
+          //      if (sch==null || sch.Count()==0)
+             //   {
+                    db.NCSM_CRC_Schedule.Add(ads);
+                    db.SaveChanges();
+                   
+              //  }
 
+              /*  else
+                {
+                    ViewBag.DupDateTimeSector = true;
+                   // return View("Add");
+                }*/
             }
             catch (Exception ex)
             {
@@ -68,9 +84,9 @@ namespace Portal.Controllers
 
         public ActionResult Edit(NCSM_CRC_DUTY_Officer d)
         {
-            /* if (Request.Cookies["loggedin"] != null)
+             if (Request.Cookies["loggedin"] != null)
                  Response.Cookies["loggedin"].Expires = DateTime.Now.AddMinutes(15);
-                 */
+                 
             CustomerEntities db = new CustomerEntities();
             var sched = db.NCSM_CRC_Schedule.Where(w => w.ID == d.ID).FirstOrDefault();
 
@@ -80,6 +96,8 @@ namespace Portal.Controllers
         [HttpPost]
         public ActionResult Update(NCSM_CRC_Schedule us)
         {
+            if (Request.Cookies["loggedin"] != null)
+                Response.Cookies["loggedin"].Expires = DateTime.Now.AddMinutes(15);
             CustomerEntities db = new CustomerEntities();
             string TZ = ConfigurationManager.AppSettings["TZ"];
 
@@ -105,10 +123,12 @@ namespace Portal.Controllers
 
         public ActionResult ViewSchedule(NCSM_CRC_DUTY_Officer d)
         {
+            if (Request.Cookies["loggedin"] != null)
+                Response.Cookies["loggedin"].Expires = DateTime.Now.AddMinutes(15);
             CustomerEntities db = new CustomerEntities();
-           
+            ViewBag.DupDateTimeSector = false;
             var dept = db.NCSM_CRC_DUTY_Officer.Where(w => w.ID == d.ID).FirstOrDefault();
-            var SectorNumber = db.NCSM_CRC_SectorsInSchdule_View.Select(s => s.sectornumber).ToList();
+           var SectorNumber = db.NCSM_CRC_SectorsInSchdule_View.Select(s => s.sectornumber).ToList();
             ViewBag.missSecDate = false;
            ViewBag.SectorNumber = SectorNumber;
             ViewBag.checksector = true;
@@ -118,7 +138,7 @@ namespace Portal.Controllers
             {
                 ViewBag.checksector = false;
             }
-            string allsector;
+            
 
             if (dept.ID != 1)
             {
@@ -133,21 +153,14 @@ namespace Portal.Controllers
             {
                 //var checkSch = db.NCSM_CRC_Schedule.Where(w => w.ID == d.ID);
 
-                var targetDate = DateTime.Today;
+               var targetDate = DateTime.Today;
                 var endDate = targetDate.AddDays(6);
                 var missingDates = new List<string>();
-
                 var checkdates_new = new List<string>();
-
-
                 //var checkdates = db.NCSM_CRC_Schedule.Where(w => w.deptID == d.ID).Select(s => s.start_ET).ToList();
                 var checkdDates = db.NCSM_CRC_Schedule.Where(w => w.deptID == d.ID && ((w.start_ET >= targetDate && w.start_ET < endDate) || (w.start_ET < targetDate && w.end_ET >= targetDate))).ToList();
-
                 var checkEndDates = db.NCSM_CRC_Schedule.Where(w => w.deptID == d.ID).Select(s => s.end_ET).ToList();
-
-
-
-
+                                             
                 while (targetDate <= endDate)
                 {
                     bool missing = true;
@@ -182,11 +195,8 @@ namespace Portal.Controllers
                     ViewBag.datecheck = false;
 
                 }
-            }
-
+            }              
             
-            
-
             return View(d);
         }
 
@@ -213,7 +223,7 @@ namespace Portal.Controllers
 
             CustomerEntities db = new CustomerEntities();
             var sched = db.NCSM_CRC_Schedule.Where(w => w.ID == id).FirstOrDefault();
-            var dept = db.NCSM_CRC_DUTY_Officer.Where(w => w.ID == sched.deptID).FirstOrDefault();
+            var dept = db.NCSM_CRC_DUTY_Officer.Where(w => w.ID == sched.deptID).FirstOrDefault(); ;
 
             db.NCSM_CRC_Schedule.Remove(sched);
             db.SaveChanges();

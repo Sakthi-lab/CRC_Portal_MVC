@@ -88,13 +88,16 @@ warning 6002: The table/view 'Customer.dbo.NCSM_CRC_SectorsInSchdule_View' does 
 warning 6002: The table/view 'Customer.dbo.NCSM_CRC_SectorsInSchdule_View_MissingDays' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="NCSM_CRC_SectorsInSchdule_View_MissingDays">
           <Key>
+            <PropertyRef Name="Missing" />
             <PropertyRef Name="RowNumber" />
           </Key>
           <Property Name="sectornumber" Type="nvarchar" MaxLength="5" />
           <Property Name="sector" Type="nvarchar" MaxLength="50" />
           <Property Name="deptid" Type="int" />
-          <Property Name="MissingDate" Type="varchar" MaxLength="30" />
-          <Property Name="Missing" Type="varchar" MaxLength="1" />
+          <Property Name="ScheduleEnds" Type="datetime" />
+          <Property Name="ScheduleStartsNext" Type="datetime" />
+          <Property Name="missing_comment" Type="varchar" MaxLength="149" />
+          <Property Name="Missing" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="RowNumber" Type="bigint" Nullable="false" />
         </EntityType>
         <Function Name="CRC_DUTY_Customers_SearchCustomers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -119,7 +122,9 @@ warning 6002: The table/view 'Customer.dbo.NCSM_CRC_SectorsInSchdule_View_Missin
     [NCSM_CRC_SectorsInSchdule_View_MissingDays].[sectornumber] AS [sectornumber], 
     [NCSM_CRC_SectorsInSchdule_View_MissingDays].[sector] AS [sector], 
     [NCSM_CRC_SectorsInSchdule_View_MissingDays].[deptid] AS [deptid], 
-    [NCSM_CRC_SectorsInSchdule_View_MissingDays].[MissingDate] AS [MissingDate], 
+    [NCSM_CRC_SectorsInSchdule_View_MissingDays].[ScheduleEnds] AS [ScheduleEnds], 
+    [NCSM_CRC_SectorsInSchdule_View_MissingDays].[ScheduleStartsNext] AS [ScheduleStartsNext], 
+    [NCSM_CRC_SectorsInSchdule_View_MissingDays].[missing_comment] AS [missing_comment], 
     [NCSM_CRC_SectorsInSchdule_View_MissingDays].[Missing] AS [Missing], 
     [NCSM_CRC_SectorsInSchdule_View_MissingDays].[RowNumber] AS [RowNumber]
     FROM [dbo].[NCSM_CRC_SectorsInSchdule_View_MissingDays] AS [NCSM_CRC_SectorsInSchdule_View_MissingDays]</DefiningQuery>
@@ -242,13 +247,16 @@ warning 6002: The table/view 'Customer.dbo.NCSM_CRC_SectorsInSchdule_View_Missin
         </EntityType>
         <EntityType Name="NCSM_CRC_SectorsInSchdule_View_MissingDays">
           <Key>
+            <PropertyRef Name="Missing" />
             <PropertyRef Name="RowNumber" />
           </Key>
           <Property Name="sectornumber" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
           <Property Name="sector" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="deptid" Type="Int32" />
-          <Property Name="MissingDate" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="Missing" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="ScheduleEnds" Type="DateTime" Precision="3" />
+          <Property Name="ScheduleStartsNext" Type="DateTime" Precision="3" />
+          <Property Name="missing_comment" Type="String" MaxLength="149" FixedLength="false" Unicode="false" />
+          <Property Name="Missing" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="RowNumber" Type="Int64" Nullable="false" />
         </EntityType>
         </Schema>
@@ -374,7 +382,9 @@ warning 6002: The table/view 'Customer.dbo.NCSM_CRC_SectorsInSchdule_View_Missin
               <MappingFragment StoreEntitySet="NCSM_CRC_SectorsInSchdule_View_MissingDays">
                 <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
                 <ScalarProperty Name="Missing" ColumnName="Missing" />
-                <ScalarProperty Name="MissingDate" ColumnName="MissingDate" />
+                <ScalarProperty Name="missing_comment" ColumnName="missing_comment" />
+                <ScalarProperty Name="ScheduleStartsNext" ColumnName="ScheduleStartsNext" />
+                <ScalarProperty Name="ScheduleEnds" ColumnName="ScheduleEnds" />
                 <ScalarProperty Name="deptid" ColumnName="deptid" />
                 <ScalarProperty Name="sector" ColumnName="sector" />
                 <ScalarProperty Name="sectornumber" ColumnName="sectornumber" />

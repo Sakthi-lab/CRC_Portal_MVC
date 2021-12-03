@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\sshanmugam\Documents\Repo\NCSM_CRC_Portal\Portal\Portal\Models\800Boardup.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\sshanmugam\Documents\Repo\NCSM_CRC_Quebec\Portal\Portal\Models\800Boardup.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

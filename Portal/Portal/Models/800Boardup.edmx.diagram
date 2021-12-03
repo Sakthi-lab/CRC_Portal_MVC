@@ -12,7 +12,7 @@
         <EntityTypeShape EntityType="CustomerModel.NCSM_CRC_DUTY_ContactList" Width="1.5" PointX="9.875" PointY="5.375" />
         <EntityTypeShape EntityType="CustomerModel.NCSM_CRC_Schedule" Width="1.5" PointX="0.75" PointY="8.75" />
         <EntityTypeShape EntityType="CustomerModel.NCSM_CRC_SectorsInSchdule_View" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="CustomerModel.NCSM_CRC_SectorsInSchdule_View_MissingDays" Width="1.5" PointX="3.625" PointY="1.25" />
+        <EntityTypeShape EntityType="CustomerModel.NCSM_CRC_SectorsInSchdule_View_MissingDays" Width="1.5" PointX="4.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -5,11 +5,11 @@
 @{
     var d = Model;
     CustomerEntities db = new CustomerEntities();
-    var curDate = DateTime.UtcNow;
-    var scheds = db.NCSM_CRC_Schedule.Where(w => w.deptID == d.ID);
-    var dept = db.NCSM_CRC_DUTY_Officer.Where(w => w.ID == d.ID).FirstOrDefault();
-    var missingsch=db.NCSM_CRC_SectorsInSchdule_View_MissingDays.Where(w => w.Missing == "Y" && w.deptid == d.ID).OrderBy(o => o.sector);
 
+    var scheds = db.NCSM_CRC_Schedule.Where(w => w.deptID == d.ID).OrderBy(o => o.sector);
+    var dept = db.NCSM_CRC_DUTY_Officer.Where(w => w.ID == d.ID).FirstOrDefault();
+    var missingsch = db.NCSM_CRC_SectorsInSchdule_View_MissingDays.Where(w => w.Missing == "Y" && w.deptid == d.ID).OrderByDescending(o => o.sector);
+    var overlapsch = db.NCSM_CRC_SectorsInSchdule_View_MissingDays.Where(w => w.Missing == "O" && w.deptid == d.ID).OrderByDescending(o => o.sector);
 }
 
 
@@ -38,29 +38,36 @@
         <span class="English">   On Call Schedules</span>
         <span class="French"> Horaires d'appel</span>
 
-      
-    </span><br /><span class="dept-title">@dept.Name</span>
+
+    </span><br />
+    <span class="English">   <span class="dept-title">@dept.Name</span></span>
+    <span class="French"> <span class="dept-title">@dept.fName</span></span>
+
+
     <br />&nbsp;<br />
 
     <br />
 </div>
 
 <div style="width:1200px; margin: 0 auto; padding-bottom:20px;">
-    <span style="float:left"><span class="backBtn" style="font-size:12px;">
-                                 <span class="English">    Back</span>
-                                 <span class="French">
-                                     Arrière
-                                 </span>
-  
-</span></span>
+    <span style="float:left">
+        <span class="backBtn" style="font-size:12px;">
+            <span class="English">    Back</span>
+            <span class="French">
+                Arrière
+            </span>
+
+        </span>
+    </span>
     <span style="float:right">
-    <span class="newBtn" style="font-size:12px;">
+        <span class="newBtn" style="font-size:12px;">
 
-                                  <span class="English"> New Schedule</span>
-                                  <span class="French">   Nouveau programme    </span>
+            <span class="English"> New Schedule</span>
+            <span class="French">   Nouveau programme    </span>
 
-   
-</span></span>
+
+        </span>
+    </span>
 </div>
 <br />
 
@@ -85,7 +92,7 @@
                 <span class="French">
                     Contacts d'appel
                 </span>
-              
+
             </th>
         </tr>
 
@@ -95,12 +102,12 @@
                 <span class="English">  Start</span>
                 <span class="French">
                     Début
-                </span>                
+                </span>
             </td>
             <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
                 <span class="English"> End</span>
                 <span class="French"> Finir </span>
-                
+
             </td>
             <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
                 <span class="English"> Name</span>
@@ -114,7 +121,7 @@
                 <span class="English"> Sector</span>
                 <span class="French"> Secteur</span>
             </td>
-        
+
             <td style="width: 65px; font-weight:bold; border: 1px solid; text-align:center;">&nbsp;</td>
             <td style="width: 75px; font-weight:bold; border: 1px solid; text-align:center;">&nbsp;</td>
         </tr>
@@ -127,8 +134,8 @@
 
 
         <tr style="font-family: Arial;" class="hoverTD">
-            <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@sched.start_ET</span></td>
-            <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@sched.end_ET</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@string.Format("{0:MM/dd/yyyy HH:mm:ss}", sched.start_ET)</span></td>
+            <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID">@string.Format("{0:MM/dd/yyyy HH:mm:ss}", sched.end_ET)</span></td>
             <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@cont.ContactFullName</span></td>
             <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@cont.ContactCell1</span></td>
             <td style="border: 1px solid; text-align:left;"><span rec="@sched.ID.ToString()">@sched.sector</span></td>
@@ -141,7 +148,7 @@
                 <span class="French">
                     <span rec="@sched.ID.ToString()" class="Ebtn" style="font-size:12px;">
                         Éditer
-                    </span>                    
+                    </span>
                 </span>
             </td>
             <td style="border: 1px solid; text-align:center;">
@@ -153,7 +160,7 @@
                     <span rec="@sched.ID.ToString()" schedName="@sched.start_ET" class="Dbtn" style="font-size:12px;">
                         Effacer
                     </span>
-                </span>            
+                </span>
             </td>
         </tr>
 
@@ -168,7 +175,7 @@
             <th class="tableHeader" style="background-color: #00a9ec; font-family: Arial; color:#FFFFFF;" colspan="16">
                 <span class="English">  Missing Dates for the Scheduled Sectors</span>
                 <span class="French"> Dates manquantes pour les secteurs programmés</span>
-               
+
             </th>
         </tr>
 
@@ -177,27 +184,67 @@
             <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
                 <span class="English">Sectors</span>
                 <span class="French"> secteurs</span>
-                
+
             </td>
             <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
-                <span class="English"> Missing Dates</span>
-                <span class="French"> Dates manquantes</span>
+                <span class="English"> Missing Schedule between</span>
+                <span class="French">
+                    Horaire manquant entre
+                </span>
 
-               
+
             </td>
         </tr>
         @foreach (var miss in missingsch)
         {
-        <tr style="font-family: Arial;" class="hoverTD">
-            <td style="border: 1px solid; text-align:left;"><span rec="">@miss.sector</span></td>
-            <td style="border: 1px solid; text-align:left;"><span rec="">@miss.MissingDate</span></td>
-        </tr>
-                }
+            <tr style="font-family: Arial;" class="hoverTD">
+                <td style="border: 1px solid; text-align:left;"><span rec="">@miss.sector</span></td>
+                <td style="border: 1px solid; text-align:left;"><span rec="">@miss.missing_comment</span></td>
+            </tr>
+        }
 
-        </table>
-   
+    </table>
+
 </div>
+<br /><br />
+<div>
+    <table id="overlap" style="width: 1200px; background-color: #FFFFFF; border-collapse: collapse; border-style: solid; border-width: 1px; margin: 0 auto;">
 
+        <tr>
+            <th class="tableHeader" style="background-color: #00a9ec; font-family: Arial; color:#FFFFFF;" colspan="16">
+                <span class="English"> Duplicate/Overlap </span>
+                <span class="French"> Dupliquer/Chevaucher</span>
+
+            </th>
+        </tr>
+
+
+        <tr style="background-color: #FFFFCC; font-family: Arial; ">
+            <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
+                <span class="English">Sectors</span>
+                <span class="French"> secteurs</span>
+
+            </td>
+            <td style="width: 165px; font-weight:bold; border: 1px solid; text-align:left;">
+                <span class="English"> Overlap</span>
+                <span class="French">
+                    Chevaucher
+                </span>
+
+
+            </td>
+        </tr>
+        @foreach (var miss in overlapsch)
+        {
+            <tr style="font-family: Arial;" class="hoverTD">
+                <td style="border: 1px solid; text-align:left;"><span rec="">@miss.sector</span></td>
+                <td style="border: 1px solid; text-align:left;"><span rec="">@miss.missing_comment</span></td>
+            </tr>
+        }
+
+    </table>
+
+</div>
 
 
 <div id="DelConf" title="Confirm Delete">
@@ -284,6 +331,18 @@
             }
         });
 
+        $('#DupDates').dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            width: 505,
+            open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                },
+            }
+        });
 
 
         @if (ViewBag.checksector == true)
@@ -294,9 +353,14 @@
         @if (ViewBag.datecheck == true)
         {
            <text> $("#MisDates").dialog("open");</text>
-            
+
         }
-         
+
+        @if (ViewBag.DupDateTimeSector == true)
+        {
+           <text> $("#DupDates").dialog("open");</text>
+
+        }
     });
 
 
@@ -306,37 +370,47 @@
 
 </script>
 
+<div id="DupDates" title="Duplicate Schedule">
+
+    <span class="English"> Schedule already exist</span>
+    <span class="French">L'horaire existe déjà</span>
+    <br>&nbsp;<br>
+
+
+    <br />
+</div>
+
 <div id="MisSector" title="Missing Scheduling Sector">
-    Below sectors are not scheduled(s):
+
+    <span class="English">   Below sectors are not scheduled(s):</span>
+    <span class="French">Les secteurs ci-dessous ne sont pas programmés :</span>
     <br>&nbsp;<br>
 
 
     <text> @ViewBag.allsector </text><br />
 
-
     <br />
-
-
-
-
 </div>
 
 <div id="MisDates" title="Missing Dates">
-    Below Dates are missing in the schedule(s):
+    <span class="English"> Below Dates are missing in the schedule(s):</span>
+    <span class="French">Les dates ci-dessous sont manquantes dans le(s) calendrier(s) :</span>
+
     <br>&nbsp;<br>
-              <table>
-                  <tr>
-                      <td>
+    <table>
+        <tr>
+            <td>
 
-                          <text> @ViewBag.MissingDates </text> <br>&nbsp;<br>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>
+                <text> @ViewBag.MissingDates </text> <br>&nbsp;<br>
+            </td>
+        </tr>
+        <tr>
+            <td>
 
-                          <text> @ViewBag.MissingAvailSec </text>
-                      </td>
-                  </tr>
-              </table>
+                <text> @ViewBag.MissingAvailSec </text>
+            </td>
+        </tr>
+
+    </table>
 </div>
 
